@@ -14,14 +14,14 @@ It is aimed at developers who want to experiment with database-aware Kubernetes 
 
 ## Quick Start
 
-1 Clone
+1. Clone
 git clone https://github.com/<your-user>/k8s-mysql-cluster-automation.git
 cd k8s-mysql-cluster-automation
 
-2 Start Minikube (single node, 4 CPU, 8 GB RAM)
+2. Start Minikube (single node, 4 CPU, 8 GB RAM)
 minikube start --cpus=4 --memory=8g
 
-3 Deploy cluster (defaults: size 1, HPA 1-3, 60% CPU)
+3. Deploy cluster (defaults: size 1, HPA 1-3, 60% CPU)
 .\mysql_cluster_setup.ps1
 
 text
@@ -61,7 +61,7 @@ text
 ## Cleanup
 
 Remove cluster only
-kubectl -n mysql-cluster delete PerconaXtraDBCluster my-db-cluster
+`kubectl -n mysql-cluster delete PerconaXtraDBCluster my-db-cluster
 kubectl -n mysql-cluster delete pvc --all
 
 Remove everything (operator, HPA, namespace)
