@@ -61,12 +61,14 @@ text
 ## Cleanup
 
 Remove cluster only
-`kubectl -n mysql-cluster delete PerconaXtraDBCluster my-db-cluster
+```bash
+kubectl -n mysql-cluster delete PerconaXtraDBCluster my-db-cluster
 kubectl -n mysql-cluster delete pvc --all
-
+```
 Remove everything (operator, HPA, namespace)
+```bash
 kubectl delete namespace mysql-cluster
-
+```
 text
 
 ---
