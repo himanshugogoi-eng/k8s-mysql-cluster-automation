@@ -15,16 +15,19 @@ It is aimed at developers who want to experiment with database-aware Kubernetes 
 ## Quick Start
 
 1. Clone
+```bash
 git clone https://github.com/<your-user>/k8s-mysql-cluster-automation.git
 cd k8s-mysql-cluster-automation
-
+```
 2. Start Minikube (single node, 4 CPU, 8 GB RAM)
+```bash
 minikube start --cpus=4 --memory=8g
-
+```
 3. Deploy cluster (defaults: size 1, HPA 1-3, 60% CPU)
+```bash
 .\mysql_cluster_setup.ps1
+```
 
-text
 
 When the script finishes it prints:
 
@@ -34,10 +37,9 @@ When the script finishes it prints:
 * Commands to monitor pods and HPA
 
 Connect with any MySQL client:
-
+```bash
 mysql -h <service-ip> -P <port> -u root -p
-
-text
+```
 
 ---
 
@@ -51,10 +53,9 @@ text
 | `-Namespace` | `mysql-cluster` | Kubernetes namespace |
 
 Example:
-
+```bash
 .\mysql_cluster_setup.ps1 -InitialSize 2 -MaxSize 4 -CpuThreshold 50 -Namespace demo-mysql
-
-text
+```
 
 ---
 
@@ -69,7 +70,6 @@ Remove everything (operator, HPA, namespace)
 ```bash
 kubectl delete namespace mysql-cluster
 ```
-text
 
 ---
 
@@ -80,7 +80,7 @@ k8s-mysql-cluster-automation/
 ├─ README.md # this file
 └─ docs/ # optional extras (troubleshooting, diagrams)
 
-text
+
 
 ---
 
@@ -113,10 +113,11 @@ powershell
     • Waits for PXC pods to become Ready, then prints connection details.
 
 .NOTES
-    Author : <Your Name>
+    Author : Himanshu Gogoi
     Created: 2025-07-22
 #>
 
+```bash
 param(
     [int]   $InitialSize  = 1,
     [int]   $MaxSize      = 3,
@@ -243,6 +244,8 @@ Write-Color "root password: $RootPass" Yellow
 Write-Color "Watch pods : kubectl get pods -n $Namespace -w"
 Write-Color "Access svc : minikube service haproxy -n $Namespace"
 Write-Color "Delete     : kubectl delete ns $Namespace"
+```
+
 3 Step-by-Step Explanation
 Stage	Script section	What happens	Why it matters
 Prerequisite check	Check-Command / Minikube status	Ensures kubectl & minikube exist and the cluster is running.	Prevents cryptic failures later.
@@ -259,23 +262,29 @@ Customisation Pointers
 Larger clusters
 Remove unsafeFlags.pxcSize: true and set size: 3, haproxy.size: 2 for production-like HA.
 
-Resource limits
+#Resource limits
 Tune under resources: if your workstation has more/less memory.
 
-Storage class
+#Storage class
 Change the PVC storageClassName (or add the field) to use cloud disks instead of Minikube hostpath.
 
-Images
+#Images
 Pin specific tags for both PXC and HAProxy to guarantee reproducibility.
 
-Load testing
+#Load testing
 Use mysqlslap or siege inside a busybox pod to drive CPU and watch HPA scaling.
 
-Final Checks
-Pods Ready – kubectl -n mysql-cluster get pods
-
-HPA status – kubectl -n mysql-cluster get hpa
-
-Service IP – kubectl -n mysql-cluster get svc haproxy
-
+#Final Checks
+Pods Ready – 
+```bash
+kubectl -n mysql-cluster get pods
+```
+HPA status – 
+```bash
+kubectl -n mysql-cluster get hpa
+```
+Service IP – 
+```bash
+kubectl -n mysql-cluster get svc haproxy
+```
 Once these look healthy, your single-node Percona XtraDB Cluster on Minikube is fully operational.
